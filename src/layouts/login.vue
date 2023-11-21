@@ -1,36 +1,44 @@
 <script setup>
-import { login, logout } from '@/axios/oauth'
 import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
-import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
-import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
-import authV2LoginIllustrationBorderedLight from '@images/pages/auth-v2-login-illustration-bordered-light.png'
-import authV2LoginIllustrationDark from '@images/pages/auth-v2-login-illustration-dark.png'
-import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustration-light.png'
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
+import picka from '@images/pages/picka.png'
 import { themeConfig } from '@themeConfig'
-import { useRouter } from 'vue-router'
 import { VForm } from 'vuetify/components/VForm'
-
 import { useUserStore } from '@/stores/user'
+import { useOauthStore } from '@/stores/oauth'
+import { useRouter } from 'vue-router'
+import {
+  emailValidator,
+  requiredValidator,
+} from '@validators'
+import { nextTick } from 'vue'
 
 const userStore = useUserStore()
+const oauthStore = useOauthStore()
 const router = useRouter()
-
     
-async function test() {
-  await login({ email: email.value, password: password.value })
-  router.push('/')
-  await userStore.getInfo()
+async function onLogin() {
+try {
+  if (email.value && password.value) {
+    await oauthStore.login({ email: email.value, password: password.value })
+    router.push('/')
+    await userStore.getInfo()
+  }
+} catch (error) {
+  password.value = ""
+  errorMessage.value = error.response.data.error
+  await nextTick()
+  refVForm.value.resetValidation()
 }
 
-console.log(login, logout)
 
-const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV2LoginIllustrationDark, authV2LoginIllustrationBorderedLight, authV2LoginIllustrationBorderedDark, true)
+}
+
 const isPasswordVisible = ref(false)
-const refVForm = ref()
-const email = ref('tim960157@gmail.com')
-const password = ref('tim960157')
+const refVForm = ref(null)
+const email = ref('')
+const password = ref('')
 const rememberMe = ref(false)
+const errorMessage = ref('')
 </script>
 
 <template>
@@ -45,11 +53,12 @@ const rememberMe = ref(false)
       <div class="position-relative bg-background rounded-lg w-100 ma-8 me-0">
         <div class="d-flex align-center justify-center w-100 h-100">
           <VImg
-            max-width="505"
-            :src="authThemeImg"
+            max-width="800"
+            :src="picka"
             class="auth-illustration mt-16 mb-2"
           />
         </div>
+        <p>Image from : <a href="https://www.pokemongoplusplus.com">https://www.pokemongoplusplus.com</a></p>
       </div>
     </VCol>
 
@@ -64,33 +73,32 @@ const rememberMe = ref(false)
         class="mt-12 mt-sm-0 pa-4"
       >
         <VCardText>
-          <VNodeRenderer
-            :nodes="themeConfig.app.logo"
-            class="mb-6"
-          />
-
           <h5 class="text-h5 mb-1">
-            Welcome to <span class="text-capitalize"> {{ themeConfig.app.title }} </span>! 👋🏻
+            <themeConfig.app.logo class="d-inline"/>
+            Welcome to <span class="text-capitalize"> {{ themeConfig.app.title }} </span>!
           </h5>
 
           <p class="mb-0">
             Please sign-in to your account and start the adventure
           </p>
         </VCardText>
-
         <VCardText>
+          <p class="mb-0 text-center  text-error error-message" >
+            {{ errorMessage }}
+          </p>
           <VForm
             ref="refVForm"
-            @submit.prevent="test($event)"
+            @submit.prevent="onLogin"
           >
             <VRow>
               <!-- email -->
               <VCol cols="12">
                 <AppTextField
                   v-model="email"
+                  autofocus
+                  :rules="[requiredValidator, emailValidator]"
                   label="Email"
                   type="email"
-                  autofocus
                 />
               </VCol>
 
@@ -98,6 +106,7 @@ const rememberMe = ref(false)
               <VCol cols="12">
                 <AppTextField
                   v-model="password"
+                  :rules="[requiredValidator]"
                   label="Password"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
@@ -109,12 +118,12 @@ const rememberMe = ref(false)
                     v-model="rememberMe"
                     label="Remember me"
                   />
-                  <a
+                  <!-- <a
                     class="text-primary ms-2 mb-1"
                     href="#"
                   >
                     Forgot Password?
-                  </a>
+                  </a> -->
                 </div>
 
                 <VBtn
@@ -132,12 +141,12 @@ const rememberMe = ref(false)
               >
                 <span>New on our platform?</span>
 
-                <a
+                <RouterLink
                   class="text-primary ms-2"
-                  href="/register"
+                  :to="{ name: 'register' }"
                 >
                   Create an account
-                </a>
+                </RouterLink>
               </VCol>
 
               <VCol
@@ -168,9 +177,8 @@ const rememberMe = ref(false)
 
 <style lang="scss">
 @use "@core/scss/template/pages/page-auth.scss";
-</style>
 
-<route lang="yaml">
-meta:
-  layout: blank
-</route>
+.error-message{
+text-transform: capitalize;
+}
+</style>

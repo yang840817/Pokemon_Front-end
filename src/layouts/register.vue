@@ -1,20 +1,62 @@
 <script setup>
 import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
-import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
-import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
-import authV2LoginIllustrationBorderedLight from '@images/pages/auth-v2-login-illustration-bordered-light.png'
-import authV2LoginIllustrationDark from '@images/pages/auth-v2-login-illustration-dark.png'
-import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustration-light.png'
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
+import picka from '@images/pages/picka.png'
 import { themeConfig } from '@themeConfig'
 import { VForm } from 'vuetify/components/VForm'
+import {
+  alphaDashValidator,
+  emailValidator,
+  requiredValidator,
+  confirmedValidator,
+} from '@validators'
+import { useRouter } from 'vue-router'
+import { useOauthStore } from '@/stores/oauth'
+import { useSnackbarStore } from '@/stores/snackbar'
 
-const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV2LoginIllustrationDark, authV2LoginIllustrationBorderedLight, authV2LoginIllustrationBorderedDark, true)
+const router = useRouter()
+const oauthStore = useOauthStore()
+const snackbarStore = useSnackbarStore()
 const isPasswordVisible = ref(false)
 const refVForm = ref()
-const email = ref('admin@demo.com')
-const password = ref('admin')
-const rememberMe = ref(false)
+const email = ref('')
+const username = ref('')
+const password = ref('')
+const password_confirmation = ref('')
+const privacyPolicies = ref(false)
+const errorMessage = ref('')
+
+
+
+
+async function onSubmit() {
+try {
+if (
+  email.value &&
+  username.value &&
+  password.value &&
+  password_confirmation.value &&
+  password.value === password_confirmation.value &&
+  privacyPolicies.value
+) {
+    const result = await oauthStore.register({
+      name: username.value,
+      email: email.value,
+      password: password.value,
+      password_confirmation: password_confirmation.value,
+    })
+    router.push('/')
+    snackbarStore.isShow = true
+    snackbarStore.message = result.message +'  Please verify in your mailbox.'
+    
+  }
+} catch (error) {
+  console.log(error);
+  errorMessage.value = error.response.data.error
+  await nextTick()
+  refVForm.value.resetValidation()
+}
+}
+const apple =true
 </script>
 
 <template>
@@ -29,11 +71,12 @@ const rememberMe = ref(false)
       <div class="position-relative bg-background rounded-lg w-100 ma-8 me-0">
         <div class="d-flex align-center justify-center w-100 h-100">
           <VImg
-            max-width="505"
-            :src="authThemeImg"
+            max-width="800"
+            :src="picka"
             class="auth-illustration mt-16 mb-2"
           />
         </div>
+         <p>Image from : <a href="https://www.pokemongoplusplus.com">https://www.pokemongoplusplus.com</a></p>
       </div>
     </VCol>
 
@@ -48,19 +91,22 @@ const rememberMe = ref(false)
         class="mt-12 mt-sm-0 pa-4"
       >
         <VCardText>
-          <VNodeRenderer
-            :nodes="themeConfig.app.logo"
-            class="mb-6"
-          />
           <h5 class="text-h5 mb-1">
-            Adventure starts here 🚀
+            <themeConfig.app.logo class="d-inline"/>Adventure starts here
           </h5>
+          
           <p class="mb-0">
-            Make your app management easy and fun!
+            Register for our services
           </p>
         </VCardText>
 
         <VCardText>
+          <p class="mb-0 text-center  text-error error-message" >
+            {{ errorMessage }}
+          </p>
+          <!-- <p class="mb-0 text-center  text-success error-message" >
+            {{ successMessage }}
+          </p> -->
           <VForm
             ref="refVForm"
             @submit.prevent="onSubmit"
@@ -96,7 +142,14 @@ const rememberMe = ref(false)
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
-
+                <AppTextField
+                  v-model="password_confirmation"
+                  :rules="[requiredValidator,confirmedValidator(password_confirmation,password)]"
+                  label="Password_confirmation"
+                  :type="isPasswordVisible ? 'text' : 'password'"
+                  :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                  @click:append-inner="isPasswordVisible = !isPasswordVisible"
+                />
                 <div class="d-flex align-center mt-2 mb-4">
                   <VCheckbox
                     id="privacy-policy"
@@ -165,8 +218,3 @@ const rememberMe = ref(false)
 <style lang="scss">
 @use "@core/scss/template/pages/page-auth.scss";
 </style>
-
-<route lang="yaml">
-meta:
-  layout: blank
-</route>
