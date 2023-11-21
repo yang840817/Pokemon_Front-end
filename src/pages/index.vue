@@ -2,24 +2,10 @@
   <div>
     <VCard
       class="mb-6"
-      title="Kick start your project 🚀"
+      title="Welcome to Wade Pokemon Store"
     >
-      <VCardText>All the best for your new project.</VCardText>
-      <VCardText>
-        Please make sure to read our <a
-          href="https://demos.pixinvent.com/vuexy-vuejs-admin-template/documentation/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-decoration-none"
-        >
-          Template Documentation
-        </a> to understand where to go from here and how to use our template.
-      </VCardText>
-    </VCard>
-
-    <VCard title="Want to integrate JWT? 🔒">
-      <VCardText>We carefully crafted JWT flow so you can implement JWT with ease and with minimum efforts.</VCardText>
-      <VCardText>Please read our  JWT Documentation to get more out of JWT authentication.</VCardText>
+      <VCardText>Buy your favorite Pokémon on our site</VCardText>
+      <VImg src="https://r4.wallpaperflare.com/wallpaper/390/399/816/pokemon-bulbasaur-squirtle-video-games-wallpaper-17a92a6b460a55f50cdd781058678913.jpg"></VImg>
     </VCard>
   </div>
 </template>

@@ -7,7 +7,7 @@ const authProviders = [
   {
     icon: 'fa-google',
     color: '#dd4b39',
-    to: '/login/google',
+    to: 'http://wadelee.shop/api/login/google',
   },
 ]
 </script>
@@ -23,7 +23,7 @@ const authProviders = [
       min-width="100%"
       :color="global.name.value === 'dark' ? link.colorInDark : link.color"
       class="rounded"
-      :to="link.to"
+      :href="link.to"
     >
       <VIcon
         size="18"

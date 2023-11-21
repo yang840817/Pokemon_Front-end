@@ -1,7 +1,21 @@
 <script setup>
 import { useUserStore } from '@/stores/user'
+import { useOauthStore } from '@/stores/oauth'
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
+const oauthStore = useOauthStore()
+const router = useRouter()
+
+
+async function onLogout() {
+try {
+  await oauthStore.logout()
+  router.push({ path: '/' })
+} catch (error) {
+  
+}
+}
 </script>
 
 <template>
@@ -13,7 +27,7 @@ const userStore = useUserStore()
     offset-y="3"
     bordered
     color="success"
-  >
+  > 
     <VAvatar
       class="cursor-pointer"
       color="primary"
@@ -71,7 +85,7 @@ const userStore = useUserStore()
           </VListItem>
 
           <!-- 👉 Settings -->
-          <VListItem link>
+          <!-- <VListItem link>
             <template #prepend>
               <VIcon
                 class="me-2"
@@ -81,7 +95,7 @@ const userStore = useUserStore()
             </template>
 
             <VListItemTitle>Settings</VListItemTitle>
-          </VListItem>
+          </VListItem> -->
 
           <!-- 👉 Pricing -->
           <!--
@@ -117,7 +131,7 @@ const userStore = useUserStore()
           <VDivider class="my-2" />
 
           <!-- 👉 Logout -->
-          <VListItem to="/login">
+          <VListItem @click="onLogout">
             <template #prepend>
               <VIcon
                 class="me-2"
