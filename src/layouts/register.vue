@@ -46,7 +46,7 @@ if (
     })
     router.push('/')
     snackbarStore.isShow = true
-    snackbarStore.message = result.message +'  Please verify in your mailbox.'
+    snackbarStore.message = result
     
   }
 } catch (error) {
