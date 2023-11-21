@@ -17,7 +17,7 @@ onBeforeMount(async()=>{
   try {
     await userStore.getInfo()
   } catch (error) {
-    router.push('/login')
+    router.replace('/login')
   }
 }) 
 
