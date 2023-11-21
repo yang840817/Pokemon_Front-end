@@ -45,7 +45,7 @@ const { appRouteTransition } = useThemeConfig()
 
     <!-- 👉 Footer -->
     <template #footer>
-      <Footer />
+      <!-- <Footer /> -->
     </template>
 
     <!-- 👉 Customizer -->

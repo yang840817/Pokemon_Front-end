@@ -61,7 +61,7 @@ const { width: windowWidth } = useWindowSize()
 
     <!-- 👉 Footer -->
     <template #footer>
-      <Footer />
+      <!-- <Footer /> -->
     </template>
 
     <!-- 👉 Customizer -->
