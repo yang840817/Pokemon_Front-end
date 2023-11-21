@@ -4,32 +4,28 @@ import { API } from '../axios/api'
 export const useCartStore = defineStore('cart', () => {
   const cartItemList = ref({})
 
-
   async function getCart() {
-    cartItemList.value = await API.get(`/cart_items`).then(res => {
-      if (res.status === 200) return res.data
-    })
+    try {
+      const { data } = await API.get(`/cart_items`)
+      cartItemList.value = data
+    } catch (error) {
+      return Promise.reject(error)
+    }
   }
   async function addItem(jsonData) {
     try {
-      return await API.post('/cart_items', jsonData).then(res => {
-        if (res.status === 200) return { type: 'positive', message: 'Success' }
-        else return { type: 'negative', message: 'failed' }
-      })
+      await API.post('/cart_items', jsonData)
     } catch (error) {
-      return { type: 'negative', message: 'failed' }
+      return Promise.reject(error)
     }
   }
   async function deleteItem(cart_item_id) {
     try {
-      return await API.delete(`/cart_items/${cart_item_id}`).then(res => {
-        if (res.status === 200) return { type: 'positive', message: 'Success' }
-        else return { type: 'negative', message: 'failed' }
-      })
+      await API.delete(`/cart_items/${cart_item_id}`)
     } catch (error) {
-      return { type: 'negative', message: 'failed' }
+      return Promise.reject(error)
     }
   }
 
-  return { cartItemList, getCart, addItem }
+  return { cartItemList, getCart, addItem, deleteItem }
 })
