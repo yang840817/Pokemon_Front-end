@@ -1,5 +1,6 @@
 <script setup>
 import { useTheme } from 'vuetify'
+const baseURL = import.meta.env.VITE_BASE_URL
 
 const { global } = useTheme()
 
@@ -7,7 +8,7 @@ const authProviders = [
   {
     icon: 'fa-google',
     color: '#dd4b39',
-    to: 'http://wadelee.shop/api/login/google',
+    to: `${baseURL}/login/google`,
   },
 ]
 </script>
