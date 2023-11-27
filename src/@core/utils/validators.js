@@ -94,5 +94,13 @@ export const alphaDashValidator = value => {
     return true
   const valueAsString = String(value)
   
-  return /^[0-9A-Z_-]*$/i.test(valueAsString) || 'All Character are not valid'
+    return /^[0-9A-Z_-]*$/i.test(valueAsString) || 'All Character are not valid'
+}
+// 👉 User name Validator
+export const usernameValidator = value => {
+  if (isEmpty(value))
+    return true
+  const valueAsString = String(value)
+  
+  return /^[\u4e00-\u9fa5_a-zA-Z0-9 _-]*$/i.test(valueAsString) || 'Special Character are not valid'
 }
