@@ -4,7 +4,7 @@ import picka from '@images/pages/picka.png'
 import { themeConfig } from '@themeConfig'
 import { VForm } from 'vuetify/components/VForm'
 import {
-  alphaDashValidator,
+  usernameValidator,
   emailValidator,
   requiredValidator,
   confirmedValidator,
@@ -33,10 +33,11 @@ try {
 if (
   email.value &&
   username.value &&
+  /^[\u4e00-\u9fa5_a-zA-Z0-9 _-]*$/i.test(username.value) &&
   password.value &&
   password_confirmation.value &&
-  password.value === password_confirmation.value &&
-  privacyPolicies.value
+  privacyPolicies.value &&
+  password.value === password_confirmation.value 
 ) {
     const result = await oauthStore.register({
       name: username.value,
@@ -47,6 +48,7 @@ if (
     router.push('/')
     snackbarStore.isShow = true
     snackbarStore.message = result
+    snackbarStore.timeout = 20000
     
   }
 } catch (error) {
@@ -56,7 +58,6 @@ if (
   refVForm.value.resetValidation()
 }
 }
-const apple =true
 </script>
 
 <template>
@@ -104,9 +105,6 @@ const apple =true
           <p class="mb-0 text-center  text-error error-message" >
             {{ errorMessage }}
           </p>
-          <!-- <p class="mb-0 text-center  text-success error-message" >
-            {{ successMessage }}
-          </p> -->
           <VForm
             ref="refVForm"
             @submit.prevent="onSubmit"
@@ -117,7 +115,7 @@ const apple =true
                 <AppTextField
                   v-model="username"
                   autofocus
-                  :rules="[requiredValidator, alphaDashValidator]"
+                  :rules="[requiredValidator, usernameValidator]"
                   label="Username"
                 />
               </VCol>
