@@ -1,4 +1,5 @@
 <script setup>
+import { avatarText } from '@core/utils/formatters'
 import { useUserStore } from '@/stores/user'
 import { useOauthStore } from '@/stores/oauth'
 import { useRouter } from 'vue-router'
@@ -33,7 +34,16 @@ try {
       color="primary"
       variant="tonal"
     >
-      <VImg :src="userStore.user.photo" />
+      <VImg 
+        v-if="userStore.user.photo" 
+        :src="userStore.user.photo" 
+      />
+      <span
+        v-else
+        class="font-weight-medium"
+      >
+        {{ avatarText(userStore.user.name) }}
+      </span>
 
       <!-- SECTION Menu -->
       <VMenu
@@ -58,7 +68,16 @@ try {
                     color="primary"
                     variant="tonal"
                   >
-                    <VImg :src="userStore.user.photo" />
+                    <VImg 
+                      v-if="userStore.user.photo"
+                      :src="userStore.user.photo" 
+                    />
+                    <span 
+                      v-else
+                      class="font-weight-medium"
+                    >
+                      {{ avatarText(userStore.user.name) }}
+                    </span>
                   </VAvatar>
                 </VBadge>
               </VListItemAction>
@@ -84,18 +103,18 @@ try {
             <VListItemTitle>Profile</VListItemTitle>
           </VListItem>
 
-          <!-- 👉 Settings -->
-          <!-- <VListItem link>
+          <!-- 👉 Order List -->
+          <VListItem to="/order">
             <template #prepend>
               <VIcon
                 class="me-2"
-                icon="tabler-settings"
+                icon="tabler-list"
                 size="22"
               />
             </template>
 
-            <VListItemTitle>Settings</VListItemTitle>
-          </VListItem> -->
+            <VListItemTitle>Order List</VListItemTitle>
+          </VListItem>
 
           <!-- 👉 Pricing -->
           <!--
