@@ -40,9 +40,10 @@ handleSkinChanges()
       <RouterView />
       <ScrollToTop />
       <v-snackbar
-        :timeout="20000"
-        color="success"
+        :timeout="snackbarStore.timeout"
+        :color="snackbarStore.color"
         v-model="snackbarStore.isShow"
+
       >
         {{ snackbarStore.message }}
       </v-snackbar>
