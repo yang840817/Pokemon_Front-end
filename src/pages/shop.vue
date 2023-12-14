@@ -1,7 +1,7 @@
 <script setup>
 import { onBeforeMount, watchEffect } from "vue";
 import { useCartStore } from "@/stores/cart";
-import { useRaceStore } from "@/stores/pokemon";
+import { useRaceStore } from "@/stores/race";
 import { useSnackbarStore } from "@/stores/snackbar";
 import { useRouter, useRoute } from "vue-router";
 

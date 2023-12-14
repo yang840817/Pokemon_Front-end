@@ -1,16 +1,16 @@
 <script setup>
-import { useTheme } from 'vuetify'
-const baseURL = import.meta.env.VITE_BASE_URL
+import { useTheme } from "vuetify";
+const baseURL = import.meta.env.VITE_BASE_URL;
 
-const { global } = useTheme()
+const { global } = useTheme();
 
 const authProviders = [
   {
-    icon: 'fa-google',
-    color: '#dd4b39',
+    icon: "fa-google",
+    color: "#dd4b39",
     to: `${baseURL}/login/google`,
   },
-]
+];
 </script>
 
 <template>
@@ -26,10 +26,8 @@ const authProviders = [
       class="rounded"
       :href="link.to"
     >
-      <VIcon
-        size="18"
-        :icon="link.icon"
-      />
+      <VIcon size="18" :icon="link.icon" />
+      <span class="ml-3">Continue with Google</span>
     </VBtn>
   </div>
 </template>
