@@ -44,7 +44,7 @@ async function readOrderDetail(order) {
         <v-toolbar-title>Order History</v-toolbar-title>
         <v-spacer></v-spacer>
       </v-toolbar>
-      <VList>
+      <VList v-if="orderStore.orderList.length">
         <v-list-item
           v-for="order in orderStore.orderList"
           :key="order.id"
@@ -70,6 +70,7 @@ async function readOrderDetail(order) {
           </template>
         </v-list-item>
       </VList>
+      <VCard v-else subtitle="You haven't purchased anything yet!"></VCard>
     </v-card>
     <orderDetailDialog
       v-model:isDialogVisible="isOrderDetailDialogVisible"
